@@ -4,15 +4,21 @@ This launcher has been designed with the main goal of easing the development, te
 
 ## Features:
 
-1. **Download and Launch Test Builds:** The Launcher allows you to download and launch the latest builds of the game.
+- **Download and Launch Test Builds:** 
 
-2. **Change Game Settings:** The Launcher lets you easily customize various game settings, such as graphics quality, and control configurations.
+    The Launcher allows you to download and launch the latest builds of the game.
 
-3. **Provide Feedback:** The Launcher provides a direct link to a Google Form, where you can share your thoughts, suggestions, and report any issues you encounter during your gameplay.
+- **Change Game Settings:** 
+
+   The Launcher lets you easily customize various game settings, such as graphics quality, and control configurations.
+
+ - **Provide Feedback:** 
+
+    The Launcher provides a direct link to a Google Form, where you can share your thoughts, suggestions, and report any issues you encounter during your gameplay.
 
 ## Available versions:
-- With auto-update, may be false positive in some antivirus.
-- Without auto-update. You will still get a notification when a new version is available.
+- **PMV-Launcher.exe:** With auto-update, may be false positive in some antivirus.
+- **PMV-Launcher_nau.exe:** Without auto-update. You will still get a notification when a new version is available.
 
 ## How to use:
 1. Download the preferred version of the launcher from the [releases](https://github.com/MikeAtom/PMV-Launcher/releases) page.

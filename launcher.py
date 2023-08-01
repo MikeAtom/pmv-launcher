@@ -3,13 +3,13 @@ import downloader as dw
 import sys
 import pygame
 
-version = 20230731
+version = 20230801
 sg.theme('DarkGreen6')
 transparentColor = sg.theme_background_color()
 
 try:
     loadLayout = [
-        [sg.Text('Updating Launcher...')],
+        [sg.Text('Fetching data...', key="-LOAD_TEXT-")],
         [sg.ProgressBar(100, orientation='h', size=(200, 20), bar_color=('#79764C', '#DDEEDF'), key='progressbar')],
         [sg.Text(''), sg.Push(), sg.Button('Cancel', size=(10, 1))]
     ]
@@ -24,36 +24,29 @@ try:
     icon = dw.get_icon(dwData['icon'])
     images = dw.get_images(dwData['images'])
 
-    loadWindow['progressbar'].UpdateBar(100)
-    loadWindow.read(timeout=1000)
-    loadWindow.close()
-
-
-
-
-
     if dwData['launcherVersion'] > version:
-        # Show window with error message
-        window = sg.Window('Error', [[sg.Text('Launcher is out of date, please update')]],
-                           no_titlebar=True, finalize=True, margins=(0, 0), element_padding=(0, 0))
-        window.read(timeout=5000)
         sys.exit()
 
-    # if not testing ask for master password
+    loadWindow['progressbar'].UpdateBar(50)
+    loadWindow.read(timeout=1000)
+
+
+    # if not testing ask for master key
     if not dwData['isTesting']:
         errorLayout = [
-            [sg.Text('Enter master password')],
-            [sg.Input(key='-IN-')],
-            [sg.Button('Submit', key='-SUBMIT-'), sg.Button('Cancel', key='-CANCEL-')]
+            [sg.Push(), sg.Text('Enter master key'), sg.Push()],
+            [sg.Push(), sg.Input(key='-IN-', password_char='*', size=(40, 1)), sg.Push()],
+            [sg.Push(), sg.Button('Submit', key='-SUBMIT-'), sg.Push(), sg.Button('Cancel', key='-CANCEL-'), sg.Push()]
         ]
 
-        errorWindow = sg.Window('Error', errorLayout, no_titlebar=True, finalize=True, margins=(0, 0),
-                                element_padding=(0, 0))
+        errorWindow = sg.Window('Error', errorLayout, size=(400, 100), no_titlebar=True, finalize=True,
+                                return_keyboard_events=True)
 
         while True:
             event, values = errorWindow.read()
-            if event == '-SUBMIT-':
+            if event == '-SUBMIT-' or event == '\r':
                 if values['-IN-'] == dwData['masterKey']:
+                    errorWindow.close()
                     break
                 else:
                     errorWindow['-IN-'].update('')
@@ -66,7 +59,11 @@ except Exception as e:
     window = sg.Window('Error', [[sg.Text('Unable to connect to server')]],
                        no_titlebar=True, finalize=True, margins=(0, 0), element_padding=(0, 0))
     window.read(timeout=5000)
-    sys.exit(0)
+    sys.exit()
+
+loadWindow['progressbar'].UpdateBar(100)
+loadWindow.read(timeout=1000)
+loadWindow.close()
 
 backgroundImage = images[0]
 windowBackground = sg.Window('Background', [[sg.Image(backgroundImage)]], no_titlebar=True, finalize=True,
@@ -101,6 +98,7 @@ while True:
         windowBackground.hide()
 
         import game
+
         game.main(dwData['gameTests'], dwData['sampleText'], images[1])
 
         window.un_hide()
@@ -111,6 +109,7 @@ while True:
         windowBackground.hide()
 
         import options
+
         options.main(icon)
 
         window.un_hide()
@@ -119,13 +118,12 @@ while True:
     elif event == '-HELP-':
         # open browser to support page
         import webbrowser
+
         webbrowser.open(dwData['supportURL'])
         break
 
     elif event == '-EXIT-':
         break
-
-
 
 window.close()
 windowBackground.close()

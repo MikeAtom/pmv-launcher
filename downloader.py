@@ -59,6 +59,13 @@ def get_images(urlList):
     return filesPathsList
 
 
+def update_launcher(url, path):
+    # Download the file from `url` and save it locally under `path`:
+    with urllib.request.urlopen(url) as response, open(os.path.join(path), 'wb') as out_file:
+        data = response.read()
+        out_file.write(data)
+
+
 def download_executable(exeURL):
     path = os.path.join(tempDir, 'tmp.exe')
 

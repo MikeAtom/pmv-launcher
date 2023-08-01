@@ -25,11 +25,26 @@ try:
     images = dw.get_images(dwData['images'])
 
     if dwData['launcherVersion'] > version:
+        errorLayout = [
+            [sg.VPush()],
+            [sg.Push(), sg.Text('Launcher is out of date'), sg.Push()],
+            [sg.Push(), sg.Button('Update', key='-UPDATE-'), sg.Push()],
+            [sg.VPush()]
+        ]
+
+        errorWindow = sg.Window('Error', errorLayout, size=(400, 100), no_titlebar=True, finalize=True)
+
+        event, values = errorWindow.read(timeout=5000)
+
+        if event == '-UPDATE-':
+            import webbrowser
+
+            webbrowser.open(dwData['launcherPublicURL'])
+
         sys.exit()
 
     loadWindow['progressbar'].UpdateBar(50)
     loadWindow.read(timeout=1000)
-
 
     # if not testing ask for master key
     if not dwData['isTesting']:
@@ -56,8 +71,9 @@ try:
 except Exception as e:
     print(e)
     # Show window with error message
-    window = sg.Window('Error', [[sg.Text('Unable to connect to server')]],
-                       no_titlebar=True, finalize=True, margins=(0, 0), element_padding=(0, 0))
+    window = sg.Window('Error',
+                       [[sg.VPush()], [sg.Push(), sg.Text('Unable to connect to server'), sg.Push()], [sg.VPush()]],
+                       size=(400, 100), no_titlebar=True, finalize=True)
     window.read(timeout=5000)
     sys.exit()
 

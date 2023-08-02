@@ -44,7 +44,7 @@ def main(gameTests, sampleText, noPreviewPath):
         ]
 
     for i in range(len(previewsList)):
-        if gameTests[testsNames[i]]["Executable"] == "":
+        if gameTests[testsNames[i]]["Zip"] == "":
             isDisabled = True
             infoText = "Coming soon"
 
@@ -103,13 +103,21 @@ def main(gameTests, sampleText, noPreviewPath):
             gameName = testsNames[int(event[1])]
 
             # Download the game build and launch it
-            exePath = dw.download_executable(gameTests[gameName]["Executable"])
+            exePath = dw.download_executable(gameTests[gameName]["Zip"])
 
             # Launch the executable
             subprocess.Popen(exePath)
 
-            # Close the launcher
-            sys.exit()
+            window.hide()
+
+            # Check if the game has been closed
+            import psutil
+            while True:
+                if not any("PMV.exe" in s for s in (p.name() for p in psutil.process_iter())):
+                    break
+
+            window.un_hide()
+
         elif event.endswith('-FORM-'):
             # Get the name of the build
             gameName = testsNames[int(event[1])]

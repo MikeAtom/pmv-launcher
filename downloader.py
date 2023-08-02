@@ -2,6 +2,7 @@ import os
 import urllib.request
 import json
 import master_url
+import zipfile
 
 tempDir = os.path.join(os.getenv('LOCALAPPDATA'), 'temp/pmv')
 
@@ -66,12 +67,18 @@ def update_launcher(url, path):
         out_file.write(data)
 
 
-def download_executable(exeURL):
-    path = os.path.join(tempDir, 'tmp.exe')
+def download_executable(zipURL):
+    pathZip = os.path.join(tempDir, 'tmp.zip')
+    pathExe = os.path.join(tempDir, 'PMV.exe')
+    pathUnpack = os.path.join(tempDir)
 
     # Download the file from `url` and save it locally under `path`:
-    with urllib.request.urlopen(exeURL) as response, open(path, 'wb') as out_file:
+    with urllib.request.urlopen(zipURL) as response, open(pathZip, 'wb') as out_file:
         data = response.read()
         out_file.write(data)
 
-    return path
+    # Unpack the zip file
+    with zipfile.ZipFile(pathZip, 'r') as zip_ref:
+        zip_ref.extractall(pathUnpack)
+
+    return pathExe

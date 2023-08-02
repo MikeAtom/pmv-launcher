@@ -1,11 +1,13 @@
 import PySimpleGUI as sg
 import downloader as dw
+from options import check_if_settings_file_exists
 import sys
-import pygame
 
-version = 20230801
+version = 20230802
 sg.theme('DarkGreen6')
 transparentColor = sg.theme_background_color()
+
+check_if_settings_file_exists()
 
 try:
     loadLayout = [

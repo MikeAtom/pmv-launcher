@@ -34,6 +34,10 @@ def write_settings():
 def write_default_setting():
     global userResolution, userDisplayMode, userGraphicsQuality, userVSync, userController, userPrompt, userLanguage, inputDevicesList
 
+    inputDevicesList = ['Keyboard + Mouse'] + [i.split(" - ")[1] for i in
+                                               [f"{i} - {pygame.joystick.Joystick(i).get_name()}" for i in
+                                                range(pygame.joystick.get_count())]]
+
     userController = inputDevicesList[-1]
 
     get_prompt()
